@@ -21,7 +21,7 @@ def get_title(soup):
         # print()
  
     except AttributeError:
-        title_string = ""   
+        title_string = "blank"   
  
     return title_string
  
@@ -38,7 +38,7 @@ def get_price(soup):
             price = soup.find("span", attrs={'id':'priceblock_dealprice'}).string.strip()
  
         except:     
-            price = ""  
+            price = "blank"  
  
     return price
  
@@ -53,7 +53,7 @@ def get_rating(soup):
         try:
             rating = soup.find("span", attrs={'class':'a-icon-alt'}).string.strip()
         except:
-            rating = "" 
+            rating = "blank" 
  
     return rating
  
@@ -63,7 +63,7 @@ def get_review_count(soup):
         review_count = soup.find("span", attrs={'id':'acrCustomerReviewText'}).string.strip()
          
     except AttributeError:
-        review_count = ""   
+        review_count = "blank"   
  
     return review_count
  
@@ -94,16 +94,27 @@ if __name__ == '__main__':
  
     # Soup Object containing all data
     soup = BeautifulSoup(webpage.content, features="lxml")
+    print(soup)
  
-    # Fetch links as List of Tag Objects
-    links = soup.find_all("a", attrs={'class':'a-link-normal s-no-outline'})
+    links = soup.find_all("a", attrs={'class':'a-link-normal a-text-normal'})
+    print(links)
+    print("HERE5")
  
     # Store the links
     links_list = []
  
+    # sponsored items links are unwanted 
+    sponsored = "/gp/slredirect"
+    print(sponsored)
+    
     # Loop for extracting links from Tag Objects
     for link in links:
-        links_list.append(link.get('href'))
+        href_link = link.get('href')
+        if href_link.startswith(sponsored) == False:
+            links_list.append(href_link)
+            print("LINK href: ", href_link)
+        else:
+            print("sad")
  
  
     # Loop for extracting product details from each link 
